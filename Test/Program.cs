@@ -304,7 +304,6 @@ namespace Test
                                 Some = new ClassF
                                 {
                                     Age = 30,
-                                    //KeyValues = new System.Collections.Generic.Dictionary<string, string> { { "k", "5" }, { "l", "7" } },
                                     Name = "俱往矣",
                                     Time = DateTime.Now
                                 }
