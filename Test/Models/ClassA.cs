@@ -82,11 +82,5 @@ namespace Test.Models
         [ProtoBuf.ProtoMember(4)]
         [MessagePack.Key(4)]
         public string Address { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        //[ProtoBuf.ProtoMember(5)]
-        //[MessagePack.Key(5)]
-        //public Dictionary<string, string> KeyValues { get; set; }
     }
 }

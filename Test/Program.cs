@@ -22,7 +22,6 @@ namespace Test
 
             speedTest();
 
-
             Console.ReadLine();
         }
         static void speedTest()
