@@ -52,47 +52,5 @@ namespace SimpleBinary
         /// <param name="stream"></param>
         /// <returns>返回反序列化后的对象</returns>
         public abstract T Deserialize(Stream stream);
-
-
-
-
-
-
-        static ISerializer<T> _serializer;
-        /// <summary>
-        /// 初始化接口
-        /// </summary>
-        /// <param name="serializer"></param>
-        protected void Init(ISerializer<T> serializer)
-        {
-            _serializer = serializer;
-        }
-        /// <summary>
-        /// 序列化到流
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        public static void WriteTo(T model, Stream stream)
-        {
-            _serializer.Serialize(model, stream);
-        }
-        /// <summary>
-        /// 返回序列化结果流
-        /// </summary>
-        /// <param name="model"></param>
-        public static MemoryStream ToStream(T model)
-        {
-            return _serializer.Serialize(model);
-        }
-        /// <summary>
-        /// 反序列化
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns>返回序列化的长度</returns>
-        public static T FromBinary(Stream stream)
-        {
-            return _serializer.Deserialize(stream);
-        }
     }
 }

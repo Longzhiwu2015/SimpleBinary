@@ -18,60 +18,6 @@ namespace SimpleBinary.Generates
         {
             return nibbleToHex((byte)(nibble >> 4)) + "" + nibbleToHex((byte)(nibble & 0xf));
         }
-        string getMemberJson(string classFullName, IEnumerable<PropertyInfo> properties, IEnumerable<FieldInfo> fields)
-        {
-            var builder = new StringBuilder("{");
-            builder.Append("\\\"");
-            builder.Append(classFullName);
-            builder.Append("\\\":{");
-
-            bool hasSome = false;
-            foreach (var p in properties)
-            {
-                if (hasSome)
-                {
-                    builder.Append(",");
-                }
-                else
-                {
-                    hasSome = true;
-                }
-                builder.Append("\\\"");
-                builder.Append(p.Name);
-                builder.Append("\\\"");
-                builder.Append(":");
-                builder.Append("\\\"");
-                builder.Append(Utils.GetFullName(p.PropertyType));
-                builder.Append("\\\"");
-                buildClassJson(builder, p.PropertyType);
-            }
-            foreach (var p in fields)
-            {
-                if (hasSome)
-                {
-                    builder.Append(",");
-                }
-                else
-                {
-                    hasSome = true;
-                }
-                builder.Append("\\\"");
-                builder.Append(p.Name);
-                builder.Append("\\\"");
-                builder.Append(":");
-                builder.Append("\\\"");
-                builder.Append(Utils.GetFullName(p.FieldType));
-                builder.Append("\\\"");
-                buildClassJson(builder, p.FieldType);
-            }
-            builder.Append("}");
-            builder.Append("}");
-            return builder.ToString();
-        }
-        void buildClassJson(StringBuilder builder, Type type)
-        {
-
-        }
         StringBuilder memberBuilder = new StringBuilder("{");
         /// <summary>
         /// 开始一个成员访问

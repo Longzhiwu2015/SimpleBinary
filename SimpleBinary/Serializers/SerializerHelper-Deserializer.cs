@@ -3961,11 +3961,7 @@ namespace SimpleBinary.Serializers
                 var tempByte = stream.ReadByte();
                 if (tempByte == -1) throw new Exception("意料之外的流长度");
                 result[i] = tempByte == 1;
-            }
-            Lazy<string> vv = new Lazy<string>();
-            //vv.Value;
-            Task<string> tt = Task.FromResult<string>("");
-            
+            }            
         }
         //Complext,Lazy<>
         /*
