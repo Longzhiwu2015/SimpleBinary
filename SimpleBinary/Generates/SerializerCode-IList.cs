@@ -153,7 +153,7 @@ namespace SimpleBinary.Generates
             }
             deserializeBuilder.AppendLine($"                for (var i = 0; i < {tempListCountName}; i++)");
             deserializeBuilder.AppendLine("                {");
-            deserializeBuilder.AppendLine($"                    var listItem = default({itemModelFullName});");
+            deserializeBuilder.AppendLine($"                    {itemModelFullName} listItem;");
             generateCodeByType(modelType, builder, deserializeBuilder, "listItem", "listItem");
             deserializeBuilder.AppendLine($"                    listItems.Add(listItem);");
             builder.AppendLine("                }");
@@ -195,7 +195,7 @@ namespace SimpleBinary.Generates
             deserializeBuilder.AppendLine($"                for (var i = 0; i < {tempArrayName}; i++)");
             deserializeBuilder.AppendLine("                {");
             var modelType = propertyType.GetElementType();
-            deserializeBuilder.AppendLine($"                    var arrayItem = default({Utils.GetFullName(modelType)});");
+            deserializeBuilder.AppendLine($"                    {Utils.GetFullName(modelType)} arrayItem;");
             generateCodeByType(modelType, builder, deserializeBuilder, "arrayItem", "arrayItem");
             deserializeBuilder.AppendLine($"                    arrayItems[i] = arrayItem;");
             builder.AppendLine("                }");

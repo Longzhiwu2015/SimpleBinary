@@ -45,10 +45,7 @@ namespace SimpleBinary.Generates
             builder.AppendLine("            }");
             builder.AppendLine($"            else");
             builder.AppendLine("            {");
-            builder.AppendLine($"               foreach (var b in System.BitConverter.GetBytes({serializeFieldName}.Count))");
-            builder.AppendLine("                {");
-            builder.AppendLine("                    stream.WriteByte(b);");
-            builder.AppendLine("                }");
+            builder.AppendLine($"                stream.Write(System.BitConverter.GetBytes({serializeFieldName}.Count));");
             builder.AppendLine($"               foreach (var keyValueItem in {serializeFieldName})");
             builder.AppendLine("                {");
             var tempDictCountName = $"dictCount_{index++}";
@@ -113,9 +110,22 @@ namespace SimpleBinary.Generates
             deserializeBuilder.AppendLine("                {");
             var keyTypeFullName = Utils.GetFullName(argumentTypes[0]);
             var valueTypeFullName = Utils.GetFullName(argumentTypes[1]);
-            deserializeBuilder.AppendLine($"                    System.Collections.Generic.KeyValuePair<{keyTypeFullName}, {valueTypeFullName}> keyValueItem;");
-            buildKeyValuePair(builder, deserializeBuilder, "keyValueItem", "keyValueItem", argumentTypes);
-            deserializeBuilder.AppendLine($"                    tempDict[keyValueItem.Key] = keyValueItem.Value;");
+
+            //deserializeBuilder.AppendLine($"                    System.Collections.Generic.KeyValuePair<{keyTypeFullName}, {valueTypeFullName}> keyValueItem;");
+            //buildKeyValuePair(builder, deserializeBuilder, "keyValueItem", "keyValueItem", argumentTypes);
+            //deserializeBuilder.AppendLine($"                    tempDict[keyValueItem.Key] = keyValueItem.Value;");
+
+            var keyValuePairKeyName = $"keyValuePairKey_{index++}";
+            deserializeBuilder.AppendLine($"           {keyTypeFullName} {keyValuePairKeyName};");
+            generateCodeByType(argumentTypes[0], builder, deserializeBuilder, serializeFieldName + ".Key", keyValuePairKeyName, keyTypeFullName);
+            var keyValuePairValueName = $"keyValuePairValue_{index++}";
+            deserializeBuilder.AppendLine($"           {valueTypeFullName} {keyValuePairValueName};");
+            generateCodeByType(argumentTypes[1], builder, deserializeBuilder, serializeFieldName + ".Value", keyValuePairValueName, valueTypeFullName);
+            deserializeBuilder.AppendLine($"                    tempDict[{keyValuePairKeyName}] = {keyValuePairValueName};");
+
+
+
+
             builder.AppendLine("                }");
             builder.AppendLine("            }");
             deserializeBuilder.AppendLine("                }");
