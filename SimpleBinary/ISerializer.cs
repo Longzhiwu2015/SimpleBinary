@@ -54,24 +54,5 @@ namespace SimpleBinary
         /// 获取成员和类型描述Json
         /// </summary>
         string MemberJson { get; }
-        /// <summary>
-        /// 序列化
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        //IEnumerable<byte> Serialize(object model);
-        /// <summary>
-        /// 序列化到流
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="targetStream"></param>
-        /// <returns>返回序列化的长度</returns>
-        //int Serialize(object model, Stream targetStream);
-        /// <summary>
-        /// 反序列化
-        /// </summary>
-        /// <param name="dataStream"></param>
-        /// <returns>返回反序列化后的对象</returns>
-        //object Deserialize(Stream dataStream);
     }
 }

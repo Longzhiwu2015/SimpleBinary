@@ -21,7 +21,7 @@ namespace Test
             tupleTest();
 
             speedTest();
-
+            
             Console.ReadLine();
         }
         static void speedTest()
