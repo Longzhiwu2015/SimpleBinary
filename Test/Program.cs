@@ -200,6 +200,9 @@ namespace Test
                 //Console.WriteLine($"SimpleBinary反序列化5000个对象，共执行了{count}次，耗时{sw.ElapsedMilliseconds}毫秒");
                 sw.Reset();
                 stream = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(MessagePackPath));
+                var model123 = OtherSerialize.ToModelMsg<List<ClassF>>(stream);
+                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(model123));
+                stream.Seek(0, System.IO.SeekOrigin.Begin);
                 sw.Start();
                 for (var i = 0; i < count; i++)
                 {

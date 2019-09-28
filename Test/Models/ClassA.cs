@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 namespace Test.Models
 {
@@ -20,7 +21,7 @@ namespace Test.Models
         /// <summary>
         /// 当前执行步骤
         /// </summary>
-        [SimpleBinary.BinaryIgnore]//二进制序列化反序列化时不处理这个属性
+        [IgnoreDataMember]//二进制序列化反序列化时不处理这个属性
         public virtual ExecuteStack CurrentStep { get; set; }
         /// <summary>
         /// 当前执行步骤
@@ -68,19 +69,20 @@ namespace Test.Models
     }
     [ProtoBuf.ProtoContract]
     [MessagePack.MessagePackObject]
+    //[System.Runtime.Serialization.DataContract]
     public class ClassF
     {
         [ProtoBuf.ProtoMember(1)]
         [MessagePack.Key(1)]
         public string Name { get; set; }
         [ProtoBuf.ProtoMember(2)]
-        [MessagePack.Key(2)]
+        //[MessagePack.Key(2)]
         public int Age { get; set; }
         [ProtoBuf.ProtoMember(3)]
-        [MessagePack.Key(3)]
+        //[MessagePack.Key(3)]
         public DateTime Time { get; set; }
         [ProtoBuf.ProtoMember(4)]
-        [MessagePack.Key(4)]
+        //[MessagePack.Key(4)]
         public string Address { get; set; }
     }
 }

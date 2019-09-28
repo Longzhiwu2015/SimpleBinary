@@ -1382,22 +1382,22 @@ namespace MessagePack.Internal
             TypeInfo ti = type.GetTypeInfo();
             var isClass = ti.IsClass || ti.IsInterface || ti.IsAbstract;
             var isStruct = ti.IsValueType;
-
+            /*
             MessagePackObjectAttribute contractAttr = ti.GetCustomAttributes<MessagePackObjectAttribute>().FirstOrDefault();
             DataContractAttribute dataContractAttr = ti.GetCustomAttribute<DataContractAttribute>();
             if (contractAttr == null && dataContractAttr == null && !forceStringKey && !contractless)
             {
                 return null;
             }
-
+            //*/
             var isIntKey = true;
             var intMembers = new Dictionary<int, EmittableMember>();
             var stringMembers = new Dictionary<string, EmittableMember>();
 
-            if (forceStringKey || contractless || (contractAttr != null && contractAttr.KeyAsPropertyName))
+            if (forceStringKey || contractless || true)// || (contractAttr != null && contractAttr.KeyAsPropertyName))
             {
                 // All public members are serialize target except [Ignore] member.
-                isIntKey = !(forceStringKey || (contractAttr != null && contractAttr.KeyAsPropertyName));
+                isIntKey = true;// !(forceStringKey || (contractAttr != null && contractAttr.KeyAsPropertyName));
 
                 var hiddenIntKey = 0;
                 foreach (PropertyInfo item in type.GetRuntimeProperties())
@@ -1524,7 +1524,7 @@ namespace MessagePack.Internal
                     {
                         continue;
                     }
-
+                    /*
                     KeyAttribute key;
                     if (contractAttr != null)
                     {
@@ -1565,7 +1565,6 @@ namespace MessagePack.Internal
                             key = new KeyAttribute(item.Name); // use property name
                         }
                     }
-
                     if (searchFirst)
                     {
                         searchFirst = false;
@@ -1599,6 +1598,17 @@ namespace MessagePack.Internal
 
                         member.IntKey = hiddenIntKey++;
                         stringMembers.Add(member.StringKey, member);
+                    }
+                    //*/
+                    if (searchFirst)
+                    {
+                        searchFirst = false;
+                        isIntKey = true;
+                        member.IntKey = intMembers.Count;
+                        intMembers.Add(member.IntKey, member);
+                    }
+                    else
+                    {
                     }
                 }
 
@@ -1634,7 +1644,7 @@ namespace MessagePack.Internal
                     {
                         continue;
                     }
-
+                    /*
                     KeyAttribute key;
                     if (contractAttr != null)
                     {
@@ -1709,6 +1719,14 @@ namespace MessagePack.Internal
 
                         member.IntKey = hiddenIntKey++;
                         stringMembers.Add(member.StringKey, member);
+                    }
+                    //*/
+                    if (searchFirst)
+                    {
+                        searchFirst = false;
+                        isIntKey = true;
+                        member.IntKey = intMembers.Count;
+                        intMembers.Add(member.IntKey, member);
                     }
                 }
             }

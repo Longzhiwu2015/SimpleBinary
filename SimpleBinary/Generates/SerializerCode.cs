@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace SimpleBinary.Generates
@@ -24,13 +25,13 @@ namespace SimpleBinary.Generates
             IEnumerable<FieldInfo> fields;
             if (getReadOnly)
             {
-                properties = classType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead && x.GetCustomAttribute<BinaryIgnoreAttribute>() == null && x.GetIndexParameters().Length == 0);
-                fields = classType.GetFields(BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttribute<BinaryIgnoreAttribute>() == null);
+                properties = classType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead && x.GetCustomAttribute<IgnoreDataMemberAttribute>() == null && x.GetIndexParameters().Length == 0);
+                fields = classType.GetFields(BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttribute<IgnoreDataMemberAttribute>() == null);
             }
             else
             {
-                properties = classType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead && x.CanWrite && x.GetCustomAttribute<BinaryIgnoreAttribute>() == null && x.GetIndexParameters().Length == 0);
-                fields = classType.GetFields(BindingFlags.Instance | BindingFlags.Public).Where(x => !x.IsInitOnly && x.GetCustomAttribute<BinaryIgnoreAttribute>() == null);
+                properties = classType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead && x.CanWrite && x.GetCustomAttribute<IgnoreDataMemberAttribute>() == null && x.GetIndexParameters().Length == 0);
+                fields = classType.GetFields(BindingFlags.Instance | BindingFlags.Public).Where(x => !x.IsInitOnly && x.GetCustomAttribute<IgnoreDataMemberAttribute>() == null);
             }
             return (properties,fields);
         }
@@ -154,7 +155,7 @@ namespace SimpleBinary.Generates
             bool hasSomeField = properties.Count() > 0 || fields.Count() > 0;
             if (!hasSomeField)
             {
-                properties = topClassType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead && x.GetCustomAttribute<BinaryIgnoreAttribute>() == null && x.GetIndexParameters().Length == 0);
+                properties = topClassType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Where(x => x.CanRead && x.GetCustomAttribute<IgnoreDataMemberAttribute>() == null && x.GetIndexParameters().Length == 0);
                 if (!hasSomeField)
                 {
                     isTopReadOnly = true;

@@ -861,5 +861,38 @@ namespace MessagePack
                 this.Skip(); // value
             }
         }
+        /// <summary>
+        /// Reads a MemoryStream
+        /// <see cref="MessagePackCode.Str8"/>,
+        /// <see cref="MessagePackCode.Str16"/>,
+        /// <see cref="MessagePackCode.Str32"/>,
+        /// or a code between <see cref="MessagePackCode.MinFixStr"/> and <see cref="MessagePackCode.MaxFixStr"/>.
+        /// </summary>
+        /// <returns>A string, or <c>null</c> if the current msgpack token is <see cref="MessagePackCode.Nil"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public MemoryStream ReadStream()
+        {
+            if (this.TryReadNil())
+            {
+                return null;
+            }
+
+            int byteLength = this.GetStringLengthInBytes();
+
+            ReadOnlySpan<byte> unreadSpan = this.reader.UnreadSpan;
+            //UnityEngine.Debug.Log(reader.CurrentSpan[0]);
+            //UnityEngine.Debug.Log(unreadSpan[0]);
+            if (unreadSpan.Length >= byteLength)
+            {
+                // Fast path: all bytes to decode appear in the same span.
+                var result = new MemoryStream(unreadSpan.Slice(0, byteLength).ToArray());
+                this.reader.Advance(byteLength);
+                return result;
+            }
+            else
+            {
+                throw ThrowInvalidCode(255);
+            }
+        }
     }
 }

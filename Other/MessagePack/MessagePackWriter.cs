@@ -5,6 +5,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using MessagePack.Internal;
@@ -727,7 +728,6 @@ namespace MessagePack
                 this.Write(src.AsSpan());
             }
         }
-
         /// <summary>
         /// Writes a span of bytes, prefixed with a length encoded as the smallest fitting from:
         /// <see cref="MessagePackCode.Bin8"/>,
@@ -827,7 +827,55 @@ namespace MessagePack
                 this.writer.Advance(size);
             }
         }
-
+        /// <summary>
+        /// Writes a <see cref="byte"/>[], prefixed with a length encoded as the smallest fitting from:
+        /// <see cref="MessagePackCode.Bin8"/>,
+        /// <see cref="MessagePackCode.Bin16"/>,
+        /// <see cref="MessagePackCode.Bin32"/>,
+        /// or <see cref="MessagePackCode.Nil"/> if <paramref name="src"/> is <c>null</c>.
+        /// </summary>
+        /// <param name="src">The array of bytes to write. May be <c>null</c>.</param>
+        public void Write(Stream src)
+        {
+            if (src == null)
+            {
+                this.WriteNil();
+            }
+            else
+            {
+                var memoryStream = src as MemoryStream;
+                if(memoryStream == null)
+                {
+                    memoryStream = new MemoryStream();
+                    var buffer = new byte[8192];
+                    int length;
+                    while((length = src.Read(buffer, 0, 8192))> 0)
+                    {
+                        memoryStream.Write(buffer, 0, length);
+                    }
+                }
+                this.Write(new Span<byte>(memoryStream.ToArray()));
+            }
+        }
+        /// <summary>
+        /// Writes a <see cref="byte"/>[], prefixed with a length encoded as the smallest fitting from:
+        /// <see cref="MessagePackCode.Bin8"/>,
+        /// <see cref="MessagePackCode.Bin16"/>,
+        /// <see cref="MessagePackCode.Bin32"/>,
+        /// or <see cref="MessagePackCode.Nil"/> if <paramref name="src"/> is <c>null</c>.
+        /// </summary>
+        /// <param name="src">The array of bytes to write. May be <c>null</c>.</param>
+        public void Write(MemoryStream src)
+        {
+            if (src == null)
+            {
+                this.WriteNil();
+            }
+            else
+            {
+                this.Write(new Span<byte>(src.ToArray()));
+            }
+        }
         /// <summary>
         /// Writes out an array of bytes that (may) represent a UTF-8 encoded string, prefixed with the length using one of these message codes:
         /// <see cref="MessagePackCode.MinFixStr"/>,

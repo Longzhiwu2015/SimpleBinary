@@ -6,6 +6,7 @@ using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using MessagePack.Internal;
 
@@ -486,6 +487,73 @@ namespace MessagePack.Formatters
                 IFormatterResolver resolver = options.Resolver;
                 T v = resolver.GetFormatterWithVerify<T>().Deserialize(ref reader, options);
                 return new Lazy<T>(() => v);
+            }
+        }
+    }
+
+
+
+    public sealed class MemoryStreamFormatter : IMessagePackFormatter<MemoryStream>
+    {
+        public static readonly IMessagePackFormatter<MemoryStream> Instance = new MemoryStreamFormatter();
+
+        private MemoryStreamFormatter()
+        {
+        }
+
+        public void Serialize(ref MessagePackWriter writer, MemoryStream value, MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+            }
+            else
+            {
+                writer.Write(value);
+            }
+        }
+
+        public MemoryStream Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+            else
+            {
+                return reader.ReadStream();
+            }
+        }
+    }
+    public sealed class StreamFormatter : IMessagePackFormatter<Stream>
+    {
+        public static readonly IMessagePackFormatter<Stream> Instance = new StreamFormatter();
+
+        private StreamFormatter()
+        {
+        }
+
+        public void Serialize(ref MessagePackWriter writer, Stream value, MessagePackSerializerOptions options)
+        {
+            if (value == null)
+            {
+                writer.WriteNil();
+            }
+            else
+            {
+                writer.Write(value);
+            }
+        }
+
+        public Stream Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+        {
+            if (reader.TryReadNil())
+            {
+                return null;
+            }
+            else
+            {
+                return reader.ReadStream();
             }
         }
     }
