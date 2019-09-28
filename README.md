@@ -40,7 +40,7 @@ KeyValuePair<,>, Tuple<,...>, ValueTuple<,...>,Stream,MemoryStream,
 	SimpleBinary.FastSerialize<List<ClassF>>.Serialize(list, stream);
 	//反序列化
 	var newList = SimpleBinary.FastSerialize<List<ClassF>>.Deserialize(stream);
-## 对于不想序列化的字段/属性，可以使用SimpleBinary.BinaryIgnoreAttribute特性进行标记(因System.NonSerializedAttribute特性不支持字段)
+## 对于不想序列化的字段/属性，可以使用System.Runtime.Serialization.IgnoreDataMemberAttribute特性进行标记
 
 ## 性能对比测试
 
